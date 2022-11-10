@@ -55,6 +55,30 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AddDatabaseActionPerformed"/>
           </Events>
         </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="ADDTRIGGER">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="ADD TRIGGER&#xa;"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ADDTRIGGERActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="ADDINDEX">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="ADD INDEX&#xa;"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ADDINDEXActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="DROPTABLE">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="DROP TABLE"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="DROPTABLEActionPerformed"/>
+          </Events>
+        </MenuItem>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPopupMenu" name="filePopMenu">
@@ -181,19 +205,22 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="jLabel2" min="-2" pref="359" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="474" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="434" max="-2" attributes="0"/>
                   <Component id="jButton3" min="-2" pref="115" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <Component id="connect" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="disconnect" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="RECHARGE" min="-2" pref="53" max="-2" attributes="0"/>
+                          <EmptySpace min="22" pref="22" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="jScrollPane2" alignment="1" min="-2" pref="198" max="-2" attributes="0"/>
+                      <Component id="jScrollPane2" min="-2" pref="198" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -216,18 +243,17 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jButton3" min="-2" pref="73" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-                                  <Component id="jLabel2" min="-2" pref="40" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <Component id="jButton3" min="-2" pref="73" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="103" alignment="1" groupAlignment="0" attributes="0">
-                          <Component id="clear" min="-2" pref="31" max="-2" attributes="0"/>
-                          <Component id="run" min="-2" pref="31" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabel2" min="-2" pref="40" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="clear" min="-2" pref="31" max="-2" attributes="0"/>
+                              <Component id="run" min="-2" pref="31" max="-2" attributes="0"/>
+                              <Component id="RECHARGE" min="-2" pref="23" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -493,6 +519,14 @@
               <Border info="null"/>
             </Property>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="RECHARGE">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="RC"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="RECHARGEActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

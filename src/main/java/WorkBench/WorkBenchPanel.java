@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package WorkBench;
 
 import java.awt.Color;
@@ -21,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import javax.swing.JFileChooser;
 
 import javax.swing.table.DefaultTableModel;
@@ -28,6 +25,7 @@ import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
+import javax.swing.text.Position;
 
 /**
  *
@@ -56,6 +54,10 @@ public class WorkBenchPanel extends javax.swing.JFrame {
         run.setEnabled(false);
         clear.setEnabled(false);
         disconnect.setEnabled(false);
+        ADDTRIGGER.enable(false);
+        ADDINDEX.enable(true);
+        AddDatabase.enable(true);
+        //ADDVIEW.enable(true);
 
         //cargar jtree
         LoadTree();
@@ -64,6 +66,11 @@ public class WorkBenchPanel extends javax.swing.JFrame {
         query.setWrapStyleWord(true);
     }
 
+    boolean TriggerCreate = false;
+    boolean IndexCreate = false;
+    boolean ViewCreate = false;
+    boolean TableCreate = false;
+    boolean drop = false;
 //visualizador de base de datos 
     DefaultTreeModel tree;
     DefaultMutableTreeNode inicio = null;
@@ -72,7 +79,7 @@ public class WorkBenchPanel extends javax.swing.JFrame {
     String pathTree = "jdbc:sqlite:C:/Users/AxelM/Downloads/archive/";
     String BDSELECTED;
     String BDLOCATION;
-    Connection connectBD;
+    //Connection connectBD;
 
     //TABLA VISUALIZAR CODIGO CONSULTAS
     DefaultTableModel model;
@@ -88,6 +95,10 @@ public class WorkBenchPanel extends javax.swing.JFrame {
     //VARIABLES DE APOYO
     ArrayList<String> nameTables = new ArrayList<>();
     String BDCONNCECTED = "";
+
+    Connect connectBD = new Connect();
+
+    Functions NT = new Functions();
 
     public void LoadTree() throws SQLException {
 
@@ -326,6 +337,9 @@ public class WorkBenchPanel extends javax.swing.JFrame {
         SQLDETAILS = new javax.swing.JMenuItem();
         CREATETABLE = new javax.swing.JMenuItem();
         AddDatabase = new javax.swing.JMenuItem();
+        ADDTRIGGER = new javax.swing.JMenuItem();
+        ADDINDEX = new javax.swing.JMenuItem();
+        DROPTABLE = new javax.swing.JMenuItem();
         filePopMenu = new javax.swing.JPopupMenu();
         DATABASE = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
@@ -354,6 +368,7 @@ public class WorkBenchPanel extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         status = new javax.swing.JTable();
         jButton3 = new javax.swing.JButton();
+        RECHARGE = new javax.swing.JButton();
         jMenuBar2 = new javax.swing.JMenuBar();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -402,6 +417,30 @@ public class WorkBenchPanel extends javax.swing.JFrame {
             }
         });
         TreePopMenu.add(AddDatabase);
+
+        ADDTRIGGER.setText("ADD TRIGGER\n");
+        ADDTRIGGER.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ADDTRIGGERActionPerformed(evt);
+            }
+        });
+        TreePopMenu.add(ADDTRIGGER);
+
+        ADDINDEX.setText("ADD INDEX\n");
+        ADDINDEX.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ADDINDEXActionPerformed(evt);
+            }
+        });
+        TreePopMenu.add(ADDINDEX);
+
+        DROPTABLE.setText("DROP TABLE");
+        DROPTABLE.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DROPTABLEActionPerformed(evt);
+            }
+        });
+        TreePopMenu.add(DROPTABLE);
 
         DATABASE.setText("ADD DATABASE");
         filePopMenu.add(DATABASE);
@@ -550,6 +589,13 @@ public class WorkBenchPanel extends javax.swing.JFrame {
         jButton3.setIcon(new javax.swing.ImageIcon("C:\\Users\\AxelM\\OneDrive\\Documentos\\NetBeansProjects\\ProyectoTBD2\\src\\main\\java\\WorkBench\\Imagen\\sqlite-logo.png")); // NOI18N
         jButton3.setBorder(null);
 
+        RECHARGE.setText("RC");
+        RECHARGE.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RECHARGEActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -557,17 +603,20 @@ public class WorkBenchPanel extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(474, 474, 474)
+                .addGap(434, 434, 434)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addComponent(connect)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(disconnect))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(disconnect)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(RECHARGE, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(22, 22, 22))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTabbedPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1186, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -585,15 +634,15 @@ public class WorkBenchPanel extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(8, 8, 8)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29))
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(clear, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(run, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(clear, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(run, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(RECHARGE, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(connect, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -656,10 +705,11 @@ public class WorkBenchPanel extends javax.swing.JFrame {
         String status = "";
         ResultSet result = null;
 
+        Connection connectBD1 = connectBD.connect;
         try {
 
             //la consulta a realizar
-            PreparedStatement st = connectBD.prepareStatement("select * from " + BDSELECTED);
+            PreparedStatement st = connectBD1.prepareStatement("select * from " + BDSELECTED);
             result = st.executeQuery();
             ResultSetMetaData rsmd = result.getMetaData();
             int cantColumnasResult = rsmd.getColumnCount();
@@ -705,7 +755,7 @@ public class WorkBenchPanel extends javax.swing.JFrame {
         try {
 
             //la consulta a realizar
-            PreparedStatement st = connectBD.prepareStatement("select type,sql  from sqlite_master where name ='" + BDSELECTED + "'");
+            PreparedStatement st = connectBD.getConn().prepareStatement("select type,sql  from sqlite_master where name ='" + BDSELECTED + "'");
             result = st.executeQuery();
             ResultSetMetaData rsmd = result.getMetaData();
 
@@ -725,18 +775,18 @@ public class WorkBenchPanel extends javax.swing.JFrame {
             }
 
             if (IsTrigger == true) {
-                TriggerPanel trigger = new TriggerPanel(connectBD, query);
+                TriggerPanel trigger = new TriggerPanel(connectBD.getConn(), query);
                 trigger.setVisible(true);
             }
             if (IsIndex == true) {
 
-                IndexPanel index = new IndexPanel(connectBD, query);
+                IndexPanel index = new IndexPanel(connectBD.getConn(), query);
                 index.setVisible(true);
 
             }
             if (IsView == true) {
                 String query2 = "select sql from sqlite_master where tbl_name = '" + BDSELECTED + "'";
-                ViewPanel view = new ViewPanel(connectBD, query2);
+                ViewPanel view = new ViewPanel(connectBD.getConn(), query2);
                 view.setVisible(true);
             }
 
@@ -750,10 +800,14 @@ public class WorkBenchPanel extends javax.swing.JFrame {
     private void CREATETABLEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CREATETABLEActionPerformed
         // TODO add your handling code here:
 
-        if (BDSELECTED.equals("TABLES")) {
+        String tableName = nodoSeleccionado.toString();
+        //System.out.println(tableName);
 
-            CreateTable createTable = new CreateTable();
-            createTable.setVisible(true);
+        if (tableName.equals("TABLES") == true) {
+
+            CREATETABLE.enable(true);
+            Table NT = new Table(connectBD.getConn());
+            NT.setVisible(true);
         }
 
 
@@ -810,7 +864,7 @@ public class WorkBenchPanel extends javax.swing.JFrame {
             try {
 
                 //la consulta a realizar
-                PreparedStatement st = connectBD.prepareStatement("select * from pragma_table_info('" + BDSELECTED + "')");
+                PreparedStatement st = connectBD.getConn().prepareStatement("select * from pragma_table_info('" + BDSELECTED + "')");
 
                 result = st.executeQuery();
                 ResultSetMetaData rsmd = result.getMetaData();
@@ -846,7 +900,7 @@ public class WorkBenchPanel extends javax.swing.JFrame {
                 modelInfo.setRowCount(0);
                 modelInfo.setColumnCount(0);
                 ResultSet result2 = null;
-                PreparedStatement st2 = connectBD.prepareStatement("select * from " + BDSELECTED + "");
+                PreparedStatement st2 = connectBD.getConn().prepareStatement("select * from " + BDSELECTED + "");
 
                 result2 = st2.executeQuery();
                 ResultSetMetaData rsmd2 = result2.getMetaData();
@@ -895,6 +949,8 @@ public class WorkBenchPanel extends javax.swing.JFrame {
 
         }
 
+        //System.out.println(nodoSeleccionado);
+        //System.out.println(pathTree);
 
     }//GEN-LAST:event_DBSMouseClicked
 
@@ -943,7 +999,6 @@ public class WorkBenchPanel extends javax.swing.JFrame {
 
     private void runActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runActionPerformed
         // TODO add your handling code here:
-
         model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
         model.setColumnCount(0);
@@ -955,7 +1010,7 @@ public class WorkBenchPanel extends javax.swing.JFrame {
         try {
 
             //la consulta a realizar
-            PreparedStatement st = connectBD.prepareStatement(query.getText());
+            PreparedStatement st = connectBD.getConn().prepareStatement(query.getText());
             result = st.executeQuery();
             ResultSetMetaData rsmd = result.getMetaData();
             int cantColumnasResult = rsmd.getColumnCount();
@@ -996,7 +1051,7 @@ public class WorkBenchPanel extends javax.swing.JFrame {
 
         try {
 
-            connectBD.close();
+            //connectBD.close();
             connect.setEnabled(true);
             disconnect.setEnabled(false);
             run.setEnabled(false);
@@ -1016,8 +1071,7 @@ public class WorkBenchPanel extends javax.swing.JFrame {
             modelInfo.setRowCount(0);
             modelInfo.setColumnCount(0);
 
-            JOptionPane.showMessageDialog(null, "DESCONECTADO DE LA BASE DE DATOS!!");
-
+            //JOptionPane.showMessageDialog(null, "DESCONECTADO DE LA BASE DE DATOS!!");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage().toString());
         }
@@ -1032,10 +1086,10 @@ public class WorkBenchPanel extends javax.swing.JFrame {
 
             if (BDSELECTED.contains(".db") == true) {
 
-                connectBD = DriverManager.getConnection(BDCONNCECTED);
+                connectBD.setCon(BDCONNCECTED);
 
-                if (connectBD != null) {
-                    JOptionPane.showMessageDialog(null, "CONECTADO A LA BASE DE DATOS!!");
+                if (connectBD.getConn() != null) {
+                    //JOptionPane.showMessageDialog(null, "CONECTADO A LA BASE DE DATOS!!");
                     connect.setEnabled(false);
                     disconnect.setEnabled(true);
                     model = (DefaultTableModel) table.getModel();
@@ -1051,6 +1105,8 @@ public class WorkBenchPanel extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.getMessage().toString());
 
         }
+
+
     }//GEN-LAST:event_connectActionPerformed
 
     private void AddDatabaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddDatabaseActionPerformed
@@ -1097,6 +1153,94 @@ public class WorkBenchPanel extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void ADDTRIGGERActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ADDTRIGGERActionPerformed
+        // TODO add your handling code here:
+
+        String tableName = nodoSeleccionado.toString();
+        System.out.println(tableName);
+
+        if (tableName.equals("TRIGGERS") == true) {
+
+            ADDTRIGGER.enable(true);
+            newTrigger NT = new newTrigger(connectBD.getConn());
+            NT.setVisible(true);
+        }
+
+
+    }//GEN-LAST:event_ADDTRIGGERActionPerformed
+
+    private void RECHARGEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RECHARGEActionPerformed
+        // TODO add your handling code here:
+
+        if (NT.NameTRIGGER.size() > 0) {
+            DefaultMutableTreeNode BD = new DefaultMutableTreeNode(NT.NameTRIGGER.get(0));
+            tree.insertNodeInto(BD, nodoSeleccionado, nodoSeleccionado.getChildCount());
+            NT.NameTRIGGER.clear();
+
+        } else if (NT.NameTABLE.size() > 0) {
+            try {
+               
+                ADDTABLETOTREE(NT.NameTABLE.get(0), nodoSeleccionado);
+            } catch (SQLException ex) {
+                Logger.getLogger(WorkBenchPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            NT.NameTABLE.clear();
+
+        } else if (NT.NameIndex.size() > 0) {
+            DefaultMutableTreeNode BD = new DefaultMutableTreeNode(NT.NameIndex.get(0));
+            tree.insertNodeInto(BD, nodoSeleccionado, nodoSeleccionado.getChildCount());
+            NT.NameIndex.clear();
+        }
+        
+        if(drop==true){
+            
+            
+        }
+
+
+    }//GEN-LAST:event_RECHARGEActionPerformed
+
+    private void ADDINDEXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ADDINDEXActionPerformed
+        // TODO add your handling code here:
+
+        String tableName = nodoSeleccionado.toString();
+        System.out.println(tableName);
+
+        if (tableName.equals("INDEXES") == true) {
+
+            ADDINDEX.enable(true);
+            newIndex NT = new newIndex(connectBD.getConn());
+            NT.setVisible(true);
+        }
+
+    }//GEN-LAST:event_ADDINDEXActionPerformed
+
+    private void DROPTABLEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DROPTABLEActionPerformed
+        // TODO add your handling code here:
+         String tableName = nodoSeleccionado.toString();
+         System.out.println(tableName);
+         System.out.println(TableExists(tableName)==true);
+         if(TableExists(tableName)==true){
+             
+             drop=true;
+           
+           ResultSet result = null;
+            try{
+              
+                PreparedStatement st = connectBD.getConn().prepareStatement("DROP TABLE \""+tableName+"\"");
+                
+                st.executeUpdate();
+
+            }catch(Exception e){
+                 JOptionPane.showMessageDialog(null, e.getMessage().toString());
+           }
+             
+         }
+         
+         tree.removeNodeFromParent(nodoSeleccionado);
+        
+    }//GEN-LAST:event_DROPTABLEActionPerformed
+
     boolean selectPuesto = false;
 
     private void RESALTECOMANDOS() {
@@ -1128,6 +1272,60 @@ public class WorkBenchPanel extends javax.swing.JFrame {
         }
     }
 
+    private void ADDTABLETOTREE(String nameTBL, DefaultMutableTreeNode nodo) throws SQLException {
+
+        DefaultMutableTreeNode NAMETABLE = new DefaultMutableTreeNode(nameTBL);
+   
+        DefaultMutableTreeNode COLUMNS = new DefaultMutableTreeNode("COLUMNS");
+        NAMETABLE.add(COLUMNS);
+
+        PreparedStatement st2 = connectBD.getConn().prepareStatement("select name from pragma_table_info ('" + nameTBL + "')");
+        ResultSet result2 = st2.executeQuery();
+
+        while (result2.next()) {
+
+            COLUMNS.add(new DefaultMutableTreeNode(result2.getString(1)));
+        }
+
+        //PARTE DE TRIGGERS
+        DefaultMutableTreeNode TRIGGERS = new DefaultMutableTreeNode("TRIGGERS");
+        NAMETABLE.add(TRIGGERS);
+
+        PreparedStatement st3 = connectBD.getConn().prepareStatement("select * from sqlite_master where type = 'trigger' and tbl_name = '" + nameTBL + "'");
+        ResultSet result3 = st3.executeQuery();
+
+        while (result3.next()) {
+
+            TRIGGERS.add(new DefaultMutableTreeNode(result3.getString(2)));
+
+        }
+        //------------------------------------------------------
+        //PARTE DE INDICES
+        DefaultMutableTreeNode INDEX = new DefaultMutableTreeNode("INDEXES");
+        NAMETABLE.add(INDEX);
+
+        PreparedStatement st4 = connectBD.getConn().prepareStatement("select * from sqlite_master where type = 'index' and tbl_name = '" + nameTBL + "'and sql not null");
+        ResultSet result4 = st4.executeQuery();
+
+        while (result4.next()) {
+
+            INDEX.add(new DefaultMutableTreeNode(result4.getString(2)));
+
+        }
+
+        tree.insertNodeInto (NAMETABLE, nodo, nodo.getChildCount());
+    
+    }
+
+
+
+
+
+    //tree = new DefaultTreeModel(inicio);
+    //DBS.setModel(tree);
+
+
+
     /**
      * @param args the command line arguments
      */
@@ -1143,23 +1341,27 @@ public class WorkBenchPanel extends javax.swing.JFrame {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
 
-                }
+}
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(WorkBenchPanel.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(WorkBenchPanel.class  
 
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(WorkBenchPanel.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(WorkBenchPanel.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+} catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(WorkBenchPanel.class  
 
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(WorkBenchPanel.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+} catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(WorkBenchPanel.class  
+
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(WorkBenchPanel.class  
+
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -1176,9 +1378,10 @@ public class WorkBenchPanel extends javax.swing.JFrame {
                 try {
                     new WorkBenchPanel().setVisible(true);
 
-                } catch (SQLException ex) {
-                    Logger.getLogger(WorkBenchPanel.class
-                            .getName()).log(Level.SEVERE, null, ex);
+} catch (SQLException ex) {
+                    Logger.getLogger(WorkBenchPanel.class  
+
+.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -1186,11 +1389,15 @@ public class WorkBenchPanel extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem ADDINDEX;
+    private javax.swing.JMenuItem ADDTRIGGER;
     private javax.swing.JMenuItem AddDatabase;
     private javax.swing.JMenuItem CREATETABLE;
     private javax.swing.JMenuItem CREATETABLETOOLBAR;
     private javax.swing.JMenuItem DATABASE;
     private javax.swing.JTree DBS;
+    private javax.swing.JMenuItem DROPTABLE;
+    private javax.swing.JButton RECHARGE;
     private javax.swing.JMenuItem SELECT;
     private javax.swing.JMenuItem SQLDETAILS;
     private javax.swing.JPopupMenu TreePopMenu;

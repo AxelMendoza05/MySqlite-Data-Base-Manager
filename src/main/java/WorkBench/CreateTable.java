@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package WorkBench;
 
 import javax.swing.DefaultCellEditor;
@@ -177,7 +174,7 @@ public class CreateTable extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         
-        System.out.println(CREATETBL.getValueAt(0,2));
+        System.out.println(CREATETBL.getValueAt(0,4));
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
